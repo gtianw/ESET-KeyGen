@@ -1,7 +1,7 @@
 name: Account and Key Generator
 
 on:
- # schedule: #if need schedule 
+ # schedule: #if need schedule
  #   - cron: "0 */2 * * *"
   workflow_dispatch:
     inputs:
@@ -61,7 +61,7 @@ jobs:
     steps:
       - name: Set Variables
         id: vars
-        shell: bash 
+        shell: bash
         run: |
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "account=${{ github.event.inputs.account }}" >> $GITHUB_OUTPUT
@@ -80,14 +80,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v5
 
-      - name: Clone Repository
-        run: git clone -b "${{ steps.vars.outputs.branch }}" https://github.com/rzc0d3r/ESET-KeyGen.git
-
       - name: Setup & Run Script (Linux/macOS)
         if: runner.os != 'Windows'
         shell: bash
         run: |
-          cd ESET-KeyGen
+          cd ${{ github.workspace }}
           if [[ "$RUNNER_OS" == "macOS" ]]; then
             brew install python@3.11 || true
           else
@@ -120,7 +117,7 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          cd ESET-KeyGen
+          cd ${{ github.workspace }}
           python -m venv venv
           .\venv\Scripts\pip install -r requirements.txt
           .\venv\Scripts\Activate.ps1
